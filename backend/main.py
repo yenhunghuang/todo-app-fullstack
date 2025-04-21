@@ -5,10 +5,17 @@ from dotenv import load_dotenv
 import os
 
 from routes import todo
-from db.mongo import client
 
 # 載入環境變數
 load_dotenv()
+
+# 從環境變量獲取 MongoDB URI 或使用默認值
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
+DB_NAME = os.getenv("DB_NAME", "todo_db")
+
+# 創建 MongoDB 客戶端
+client = AsyncIOMotorClient(MONGO_URI)
+db = client[DB_NAME]
 
 app = FastAPI(title="TodoList API")
 
@@ -30,6 +37,7 @@ async def startup_db_client():
         # 測試資料庫連線
         await client.admin.command('ping')
         print("Successfully connected to MongoDB!")
+        print(f"Database: {DB_NAME}")
     except Exception as e:
         print(f"Error connecting to MongoDB: {e}")
         raise e
@@ -40,4 +48,4 @@ async def shutdown_db_client():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True) 
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

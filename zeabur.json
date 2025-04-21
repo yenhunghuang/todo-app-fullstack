@@ -1,0 +1,25 @@
+{
+  "services": [
+    {
+      "name": "mongodb",
+      "type": "mongodb",
+      "version": "latest"
+    },
+    {
+      "name": "backend",
+      "path": "./backend",
+      "env": {
+        "MONGO_URI": "${mongodb.uri}/todo_db"
+      },
+      "dependencies": ["mongodb"]
+    },
+    {
+      "name": "frontend",
+      "path": "./frontend",
+      "env": {
+        "VITE_API_URL": "https://${backend.domain}"
+      },
+      "dependencies": ["backend"]
+    }
+  ]
+}

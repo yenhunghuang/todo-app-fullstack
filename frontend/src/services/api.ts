@@ -7,7 +7,10 @@ export type Todo = {
     updated_at: string;
 };
 
-const BASE_URL = "http://localhost:8000";
+// 在本地開發環境使用完整 URL，在部署環境使用相對路徑
+const BASE_URL = import.meta.env.DEV 
+    ? "http://localhost:8000" 
+    : "/api";
 
 async function fetchTodos(): Promise<Todo[]> {
     const res = await fetch(`${BASE_URL}/todos/`);
